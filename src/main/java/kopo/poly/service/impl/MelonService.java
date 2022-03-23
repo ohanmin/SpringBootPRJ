@@ -1,10 +1,11 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.MelonDTO;
+import kopo.poly.persistance.mongodb.IMelonMapper;
 import kopo.poly.service.IMelonService;
 import kopo.poly.util.CmmUtil;
+import kopo.poly.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.DateUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Service("MelonService")
 public class MelonService implements IMelonService {
     @Resource(name = "MelonMapper")
-    private IMelonService melonService;// MongoDB에 저장할 Mapper
+    private IMelonMapper melonMapper;// MongoDB에 저장할 Mapper
     @Override
     public int collectMelonSong() throws Exception {
         int res = 0;
@@ -42,13 +43,24 @@ public class MelonService implements IMelonService {
             if((song.length() > 0) && (singer.length() >0)){
                 MelonDTO pDTO = new MelonDTO();
                 pDTO.setCollectTime(DateUtil.getDateTime("yyyyMMddhhmmss"));
+                pDTO.setSong(song);
+                pDTO.setSinger(singer);
+                //한버에 여러개의 데이터를 MongoDB에 저장할 List 형태의 데이터 저장하기
+                pList.add(pDTO);
             }
         }
-        return 0;
+        //생성할 컬렉션명
+        String colNm = "MELON_" + DateUtil.getDateTime("yyyyMMdd");
+        //MongoDB에 데이터저장하기
+        res = melonMapper.insertSong(pList, colNm);
+        //로그 찍기(추후 찍은 로그를 통해 이 함수에 접근했는지 파악하기 용이하다.)
+        log.info(this.getClass().getName() + ".collectMelonSong End");
+        return res;
     }
 
     @Override
     public List<MelonDTO> getSongList() throws Exception {
+        log.info(this.getClass().getName() + ".getSongList");
         return null;
     }
 
