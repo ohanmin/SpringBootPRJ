@@ -23,7 +23,17 @@ public interface IMelonMapper {
     /**
      * 가수별 수집된 노래의 수 가져오기
      * @param colNm 조회할 컬렉션 이름
+     *
      * @return 노래 리스트
      */
-    List<Map<String, Object>> getSingerSongCnt(String colNm) throws Exception;
+    List<MelonDTO> getSingerSongCnt(String colNm) throws Exception;
+
+    /**
+     * 가수의 노래 가져오기
+     * @param colNm 조회할 컬렉션 이름
+     * @param singer 가수명
+     * @return 노래 리스트
+     * @throws Exception
+     */
+    List<MelonDTO> getSingerSong(String colNm, String singer) throws Exception;
 }

@@ -18,5 +18,12 @@ public interface IMelonService {
      * 멜론 가수별 노래 수 가져오기
      *
      */
-    List<Map<String, Object>> getSingerSongCnt() throws Exception;
+    List<MelonDTO> getSingerSongCnt() throws Exception;
+
+    /**
+     * 가수의 노래 가져오기
+     * @return 노래 리스트
+     * @throws Exception
+     */
+    List<MelonDTO> getSingerSong() throws Exception;
 }

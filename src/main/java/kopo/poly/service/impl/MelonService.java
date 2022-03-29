@@ -61,11 +61,45 @@ public class MelonService implements IMelonService {
     @Override
     public List<MelonDTO> getSongList() throws Exception {
         log.info(this.getClass().getName() + ".getSongList");
-        return null;
+        //MongoDB에 저장된 컬렉션 이름
+        String colNm = "MELON_" + DateUtil.getDateTime("yyyyMMdd");
+        List<MelonDTO> rList = new LinkedList<>();
+        rList = melonMapper.getSongList(colNm);
+        if(rList ==null){
+            rList = new LinkedList<>();
+        }
+        log.info(this.getClass().getName() + ".getSongList End");
+        return rList;
     }
 
     @Override
-    public List<Map<String, Object>> getSingerSongCnt() throws Exception {
-        return null;
+    public List<MelonDTO> getSingerSongCnt() throws Exception {
+        log.info(this.getClass().getName() + ".getSingerSongCnt Start");
+        String colNm = "MELON_" + DateUtil.getDateTime("yyyyMMdd");
+        List<MelonDTO> rList = melonMapper.getSingerSongCnt(colNm);
+        if(rList == null){
+            rList = new LinkedList<>();
+        }
+        return rList;
+    }
+
+    @Override
+    public List<MelonDTO> getSingerSong() throws Exception {
+        //MongoDB에 저장된 컬렉션 이용
+        String colNm = "MELON_" + DateUtil.getDateTime("yyyyMMdd");
+        //수집된 데이터로부터 검색할 가수명
+        String singer = "방탄소년단";
+        //결과값
+        List<MelonDTO> rList = null;
+        //Melon 노래 수집하기
+        if(this.collectMelonSong()==1){
+            rList = melonMapper.getSingerSong(colNm, singer);
+            if(rList == null){
+                rList = new LinkedList<>();
+            }
+        }else{
+            rList = new LinkedList<>();
+        }
+        return rList;
     }
 }
